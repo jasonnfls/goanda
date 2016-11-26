@@ -1,5 +1,5 @@
 package goanda
 
-import (
-//"fmt"
+const (
+	v = 10
 )

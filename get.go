@@ -1,7 +1,7 @@
 package goanda
 
 import (
-	"bufio"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -10,7 +10,6 @@ func Getter(url string, token string) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
-
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -21,14 +20,15 @@ func Getter(url string, token string) {
 		fmt.Println(err)
 		return
 	}
+	defer resp.Body.Close()
 
-	reader := bufio.NewReader(resp.Body)
-	for {
-		line, err := reader.ReadBytes('\n')
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Println(string(line))
+	decoder := json.NewDecoder(resp.Body)
+	var Account Account
+	err = decoder.Decode(&Account)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
+	fmt.Println(Account.Details.MarginCloseoutNAV)
+
 }
