@@ -98,3 +98,25 @@ type State struct {
 	UnrealizedPL               string      `json:"unrealizedPL"`
 	WithdrawalLimit            string      `json:"withdrawalLimit"`
 }
+
+//PATCH
+type Configuration struct {
+	Alias      string `json:"alias"`
+	MarginRate string `json:"marginRate"`
+}
+
+type ConfigurationConfirmation struct {
+	ClientConfigureTransaction *ClientConfigureTransaction `json:"clientConfigureTransaction"`
+	LastTransactionID          string                      `json:"lastTransactionID"`
+}
+
+type ClientConfigureTransaction struct {
+	AccountID  string `json:"accountID"`
+	Alias      string `json:"alias"`
+	BatchID    string `json:"batchID"`
+	ID         string `json:"id"`
+	MarginRate string `json:"marginRate"`
+	Time       string `json:"time"`
+	Type       string `json:"type"`
+	UserID     int    `json:"userID"`
+}
