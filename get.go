@@ -23,12 +23,12 @@ func Getter(url string, token string) {
 	defer resp.Body.Close()
 
 	decoder := json.NewDecoder(resp.Body)
-	var Account Account
+	var Account AccountChanges
 	err = decoder.Decode(&Account)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(Account.Details.MarginCloseoutNAV)
+	fmt.Printf("%+v", Account.State)
 
 }
