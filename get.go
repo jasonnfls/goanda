@@ -1,40 +1,93 @@
 package goanda
 
 import (
-	"bytes"
+	//"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/fatih/color"
 	"net/http"
 )
 
-func Getter(url string, token string) {
-
-	var jsonString = []byte(`{"alias": "Set", "marginRate": "0.02"}`)
+func GetAccounts() Accounts {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonString))
-	//	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", "https://api-fxtrade.oanda.com/v3/accounts", nil)
+	if err != nil {
+		fmt.Println(err)
+		//NEEDS BETTER ERROR HANDLING
+	}
 
+	BearerToken := "Bearer " + Token
+	req.Header.Add("Authorization", BearerToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		//NEEDS BETTER ERROR HANDLING
+	}
+	defer resp.Body.Close()
+
+	decoder := json.NewDecoder(resp.Body)
+	var accounts Accounts
+	err = decoder.Decode(&accounts)
+	if err != nil {
+		fmt.Println(err)
+		//NEEDS BETTER ERROR HANDLING
+	}
+	return accounts
+}
+
+func Getter(url string, token string) {
+
+	//inlets: url, query params, body, struct
+	//outlet: populated struct
+
+	//var jsonString = []byte(`{"alias": "Set", "marginRate": "0.02"}`)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	//req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonString))
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	req.Header.Add("Authorization", "Bearer "+token)
+	BearerToken := "Bearer " + token
+
+	req.Header.Add("Authorization", BearerToken)
 	req.Header.Set("Content-Type", "application/json")
+
+	query := req.URL.Query()
+	query.Add("count", "6")
+	query.Add("granularity", "S5")
+	query.Add("price", "M")
+	req.URL.RawQuery = query.Encode()
+
+	fmt.Println(req.URL.String())
+
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
 	defer resp.Body.Close()
 
 	decoder := json.NewDecoder(resp.Body)
-	var Account ConfigurationConfirmation
-	err = decoder.Decode(&Account)
+	var Instrument Instrument
+	err = decoder.Decode(&Instrument)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%+v", Account.ClientConfigureTransaction)
+	//color.Cyan("████████\t%+v", Instrument.Candles[0].Mid)
+	fmt.Printf("%v %+v\n", color.CyanString("██"), Instrument.Candles[0].Mid)
+	fmt.Printf("%v %+v\n", color.RedString("██"), Instrument.Candles[0].Mid)
+	fmt.Printf("%v %+v\n", color.MagentaString("██"), Instrument.Candles[0].Mid)
+	fmt.Printf("%v %+v\n", color.BlueString("██"), Instrument.Candles[0].Mid)
+	fmt.Printf("%v %+v\n", color.GreenString("██"), Instrument.Candles[0].Mid)
+	fmt.Printf("%v %+v\n", color.YellowString("██"), Instrument.Candles[0].Mid)
+
+	// six color codes
 
 }

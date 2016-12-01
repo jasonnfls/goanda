@@ -1,6 +1,14 @@
 package goanda
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ACCOUNT BELOW
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 type Accounts struct {
+	Accounts []AccountsDetails `json:"accounts"`
+}
+
+type AccountsDetails struct {
 	ID   string      `json:"id"`
 	Tags interface{} `json:"tags"`
 }
@@ -119,4 +127,28 @@ type ClientConfigureTransaction struct {
 	Time       string `json:"time"`
 	Type       string `json:"type"`
 	UserID     int    `json:"userID"`
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INSTRUMENT BELOW
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type Instrument struct {
+	Candles     []*Candles `json:"candles"`
+	Granularity string     `json:"granularity"`
+	Instrument  string     `json:"instrument"`
+}
+
+type Candles struct {
+	Complete bool   `json:"complete"`
+	Mid      *Mid   `json:"mid"`
+	Time     string `json:"time"`
+	Volume   int    `json:"volume"`
+}
+
+type Mid struct {
+	C string `json:"c"`
+	H string `json:"h"`
+	L string `json:"l"`
+	O string `json:"o"`
 }
