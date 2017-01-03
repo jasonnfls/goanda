@@ -7,7 +7,6 @@ import (
 )
 
 func (client *Client) GetAccounts() Accounts {
-
 	req, err := http.NewRequest("GET", client.GetBase("/accounts"), nil)
 	if err != nil {
 		panic(err)
@@ -56,7 +55,6 @@ func (client *Client) GetAccount(ID string) Account {
 }
 
 func (client *Client) GetAccountSummary(ID string) AccountSummary {
-
 	req, err := http.NewRequest("GET", client.GetBase("/accounts/"+ID+"/summary"), nil)
 	if err != nil {
 		panic(err)
@@ -81,7 +79,6 @@ func (client *Client) GetAccountSummary(ID string) AccountSummary {
 }
 
 func (client *Client) GetAccountInstruments(ID string) AccountInstruments {
-
 	req, err := http.NewRequest("GET", client.GetBase("/accounts/"+ID+"/instruments"), nil)
 	if err != nil {
 		panic(err)
@@ -106,7 +103,6 @@ func (client *Client) GetAccountInstruments(ID string) AccountInstruments {
 }
 
 func (client *Client) GetAccountChanges(ID string, transactionID string) AccountChanges {
-
 	req, err := http.NewRequest("GET", client.GetBase("/accounts/"+ID+"/changes"), nil)
 	if err != nil {
 		panic(err)
@@ -135,7 +131,6 @@ func (client *Client) GetAccountChanges(ID string, transactionID string) Account
 }
 
 func (client *Client) PatchAccountConfiguration(ID string, alias string, marginRate string) ConfigurationConfirmation {
-
 	var jsonString = []byte(`{"alias": "` + alias + `", "marginRate": "` + marginRate + `"}`)
 
 	req, err := http.NewRequest("PATCH", client.GetBase("/accounts/"+ID+"/configuration"), bytes.NewBuffer(jsonString))
@@ -162,3 +157,5 @@ func (client *Client) PatchAccountConfiguration(ID string, alias string, marginR
 	return configurationConfirmation
 }
 
+func (client *Client) NewTrade(ID string) {
+}

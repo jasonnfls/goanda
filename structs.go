@@ -23,7 +23,7 @@ type AccountDetails struct {
 	Alias                       string      `json:"alias"`
 	Balance                     string      `json:"balance"`
 	CreatedByUserID             int         `json:"createdByUserID"`
-	CreatedTime                 string      `json:"createdTime"`
+	CreatedTime                 DateTime    `json:"createdTime"`
 	Currency                    string      `json:"currency"`
 	HedgingEnabled              bool        `json:"hedgingEnabled"`
 	ID                          string      `json:"id"`
@@ -40,7 +40,7 @@ type AccountDetails struct {
 	MarginUsed                  string      `json:"marginUsed"`
 	OpenPositionCount           int         `json:"openPositionCount"`
 	OpenTradeCount              int         `json:"openTradeCount"`
-	Orders                      interface{} `json:"orders"`
+	Orders                      []Order     `json:"orders"`
 	PendingOrderCount           int         `json:"pendingOrderCount"`
 	Pl                          string      `json:"pl"`
 	PositionValue               string      `json:"positionValue"`
@@ -61,7 +61,7 @@ type AccountSummaryDetails struct {
 	Alias                       string `json:"alias"`
 	Balance                     string `json:"balance"`
 	CreatedByUserID             int    `json:"createdByUserID"`
-	CreatedTime                 string `json:"createdTime"`
+	CreatedTime                 DateTime `json:"createdTime"`
 	Currency                    string `json:"currency"`
 	HedgingEnabled              bool   `json:"hedgingEnabled"`
 	ID                          string `json:"id"`
@@ -113,14 +113,14 @@ type AccountChanges struct {
 }
 
 type Changes struct {
-	OrdersCancelled interface{} `json:"ordersCancelled"`
-	OrdersCreated   interface{} `json:"ordersCreated"`
-	OrdersFilled    interface{} `json:"ordersFilled"`
-	OrdersTriggered interface{} `json:"ordersTriggered"`
-	Positions       interface{} `json:"positions"`
-	TradesClosed    interface{} `json:"tradesClosed"`
-	TradesOpened    interface{} `json:"tradesOpened"`
-	TradesReduced   interface{} `json:"tradesReduced"`
+	OrdersCancelled []Order `json:"ordersCancelled"`
+	OrdersCreated   []Order `json:"ordersCreated"`
+	OrdersFilled    []Order `json:"ordersFilled"`
+	OrdersTriggered []Order `json:"ordersTriggered"`
+	Positions       []Position `json:"positions"`
+	TradesClosed    []Trade `json:"tradesClosed"`
+	TradesOpened    []Trade `json:"tradesOpened"`
+	TradesReduced   []Trade `json:"tradesReduced"`
 	Transactions    interface{} `json:"transactions"`
 }
 
@@ -159,7 +159,7 @@ type ClientConfigureTransaction struct {
 	BatchID    string `json:"batchID"`
 	ID         string `json:"id"`
 	MarginRate string `json:"marginRate"`
-	Time       string `json:"time"`
+	Time       DateTime `json:"time"`
 	Type       string `json:"type"`
 	UserID     int    `json:"userID"`
 }
@@ -176,67 +176,116 @@ type Instrument struct {
 
 type Candles struct {
 	Complete bool   `json:"complete"`
-	Ask      *Mid   `json:"ask"`
-    Bid      *Mid   `json:"bid"`
-	Mid      *Mid   `json:"mid"`
-	Time     string `json:"time"`
+	Ask      *OHLC   `json:"ask"`
+	Bid      *OHLC   `json:"bid"`
+	Mid      *OHLC   `json:"mid"`
+	Time     DateTime `json:"time"`
 	Volume   int    `json:"volume"`
 }
 
-type Mid struct {
+type OHLC struct {
 	C string `json:"c"`
 	H string `json:"h"`
 	L string `json:"l"`
 	O string `json:"o"`
 }
 
-type ClientExtension struct {
-    Comment string
-    Id string
-    Tag string
+type ClientExtensions struct {
+	Comment string     `json:"comment"`
+	Id      string     `json:"id"`
+	Tag     string     `json:"tag"`
 }
 
 type Order struct {
-    ClientExtension ClientExtension
-    CreatedTime        string
-    Id                 int      `json:"id,string"`
-    Instrument         string
-    PartialFill        string
-    PositionFill       string
-    Price              float64  `json:"price,string"`
-    ReplacesOrderId    int      `json:"replacesOrderId,string"`
-    State              string
-    TimeInForce        string
-    TriggerCondition   string
-    Type               string
-    Units              int      `json:"units,string"`
+	ClientExtensions *ClientExtensions `json:"clientExtensions"`
+	CreatedTime        DateTime   `json:"createdTime"`
+	Id                 int      `json:"id,string"`
+	Instrument         string   `json:"instrument"`
+	PartialFill        string   `json:"partialFill"`
+	PositionFill       string   `json:"positionFill"`
+	Price              float64  `json:"price,string"`
+	ReplacesOrderId    int      `json:"replacesOrderId,string"`
+	State              string   `json:"state"`
+	TimeInForce        string   `json:"timeInForce"`
+	TriggerCondition   string   `json:"triggerCondition"`
+	Type               string   `json:"type"`
+	Units              int      `json:"units,string"`
 }
 
 type Position struct {
-    Instrument      string   `json:"instrument"`
-    PL              float64  `json:"pl,string"`
-    UnrealizedPL    float64  `json:"unrealizedPL,string"`
-    ResetttablePL   float64  `json:"resettablePL,string"`
-    Long            *PositionDetail `json:"long"`
-    Short           *PositionDetail `json:"short"`
+	Instrument      string   `json:"instrument"`
+	PL              float64  `json:"pl,string"`
+	UnrealizedPL    float64  `json:"unrealizedPL,string"`
+	ResetttablePL   float64  `json:"resettablePL,string"`
+	Long            *PositionDetail `json:"long"`
+	Short           *PositionDetail `json:"short"`
 }
 
 type PositionDetail struct {
-    PL              float64  `json:"pl,string"`
-    ResetttablePL   float64  `json:"resettablePL,string"`
-    Units           int      `json:"units,string"`
-    UnrealizedPL    float64  `json:"unrealizedPL,string"`
+	PL              float64  `json:"pl,string"`
+	ResetttablePL   float64  `json:"resettablePL,string"`
+	Units           int      `json:"units,string"`
+	UnrealizedPL    float64  `json:"unrealizedPL,string"`
 }
 
 type Trade struct {
-    CurrentUnits    int      `json:"currentUnits,string"`
-    Financing       float64  `json:"financing,string"`
-    Id              int      `json:"Id,string"`
-    InitialUnits    int      `json:"initialUnits,string"`
-    Instrument      string   `json:"instrument"`
-    OpenTime        string   `json:"openTime"`
-    Price           float64  `json:"price,string"`
-    RealizedPL      float64  `json:"realizedPL,string"`
-    State           string   `json:"state"`
-    UnrealizedPL    float64  `json:"unrealizedPL,string"`
+	CurrentUnits    int      `json:"currentUnits,string"`
+	Financing       float64  `json:"financing,string"`
+	Id              int      `json:"Id,string"`
+	InitialUnits    int      `json:"initialUnits,string"`
+	Instrument      string   `json:"instrument"`
+	OpenTime        DateTime `json:"openTime"`
+	Price           float64  `json:"price,string"`
+	RealizedPL      float64  `json:"realizedPL,string"`
+	State           string   `json:"state"`
+	UnrealizedPL    float64  `json:"unrealizedPL,string"`
 }
+
+type TakeProfitDetails struct {
+	Price              float64  `json:"price,string"`
+	TimeInForce        string   `json:"timeInForce"`
+	GtdTime            DateTime `json:"gtdTime"`
+	ClientExtensions *ClientExtensions `json:"clientExtensions"`
+}
+
+type StopLossDetails TakeProfitDetails
+
+type TrailingStopLossDetails struct {
+	Distance           float64  `json:"distance,string"`
+	TimeInForce        string   `json:"timeInForce"`
+	GtdTime            DateTime `json:"gtdTime"`
+	ClientExtensions *ClientExtensions `json:"clientExtensions"`
+}
+
+
+type Transaction struct {
+	Id         string `json:"id"`
+	Time       DateTime `json:"time"`
+	UserID     int    `json:"userID"`
+	AccountID  string `json:"accountID"`
+	BatchID    string `json:"batchID"`
+}
+
+type OrderFillTransaction struct {
+	Transaction
+	Type               string   `json:"type"`
+	OrderID   string `json:"orderID"`
+	ClientOrderID   string `json:"clientOrderID"`
+	Instrument  string     `json:"instrument"`
+	Units              int      `json:"units,string"`
+	Price              float64  `json:"price,string"`
+	Reason    string `json:"reason"`
+	PL        float64 `json:"pl,string"`
+	Financing float64 `json:"financing,string"`
+	AccountBalance float64 `json:"accountBalance,string"`
+}
+
+type OrderCancelTransaction struct {
+	Transaction
+	Type               string   `json:"type"`
+	OrderID   string `json:"orderID"`
+	ClientOrderID   string `json:"clientOrderID"`
+	Reason    string `json:"reason"`
+	ReplacedByOrderID   string `json:"replacedByOrderID"`
+}
+
