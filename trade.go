@@ -17,7 +17,7 @@ type UpdateTradeRequest struct {
 	TrailingStopLoss *TrailingStopLossDetails `json:"trailingStopLoss,omitempty"`
 }
 
-func (client *Client) UpdateTrade(ID string, tradeID string, updateTradeRequest *UpdateTradeRequest) OrderResponse {
+func (client *Client) UpdateTrade(ID string, tradeID string, updateTradeRequest *UpdateTradeRequest) UpdateTradeResponse {
 	jsonbytes, err := json.Marshal(updateTradeRequest)
 	if err != nil {
 		panic(err)
